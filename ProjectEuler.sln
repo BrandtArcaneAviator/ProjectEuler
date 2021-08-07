@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProjectEuler", "ProjectEuler.vcxproj", "{7DD36213-B6EC-44C9-A756-BADB30F60893}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SumMultiples3_5", "..\ProjectEuelerProblems\Problem1_Multiples_3_5\SumMultiples3_5\SumMultiples3_5.vcxproj", "{D695D0D4-02A3-40D9-A47F-DEFBAF48EC32}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Problem16_PowerDigitSum", "Problem16_PowerDigitSum\Problem16_PowerDigitSum.vcxproj", "{AD0E4E69-65CA-4D62-828D-61E57A02004A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,14 +23,14 @@ Global
 		{7DD36213-B6EC-44C9-A756-BADB30F60893}.Release|x64.Build.0 = Release|x64
 		{7DD36213-B6EC-44C9-A756-BADB30F60893}.Release|x86.ActiveCfg = Release|Win32
 		{7DD36213-B6EC-44C9-A756-BADB30F60893}.Release|x86.Build.0 = Release|Win32
-		{D695D0D4-02A3-40D9-A47F-DEFBAF48EC32}.Debug|x64.ActiveCfg = Debug|x64
-		{D695D0D4-02A3-40D9-A47F-DEFBAF48EC32}.Debug|x64.Build.0 = Debug|x64
-		{D695D0D4-02A3-40D9-A47F-DEFBAF48EC32}.Debug|x86.ActiveCfg = Debug|Win32
-		{D695D0D4-02A3-40D9-A47F-DEFBAF48EC32}.Debug|x86.Build.0 = Debug|Win32
-		{D695D0D4-02A3-40D9-A47F-DEFBAF48EC32}.Release|x64.ActiveCfg = Release|x64
-		{D695D0D4-02A3-40D9-A47F-DEFBAF48EC32}.Release|x64.Build.0 = Release|x64
-		{D695D0D4-02A3-40D9-A47F-DEFBAF48EC32}.Release|x86.ActiveCfg = Release|Win32
-		{D695D0D4-02A3-40D9-A47F-DEFBAF48EC32}.Release|x86.Build.0 = Release|Win32
+		{AD0E4E69-65CA-4D62-828D-61E57A02004A}.Debug|x64.ActiveCfg = Debug|x64
+		{AD0E4E69-65CA-4D62-828D-61E57A02004A}.Debug|x64.Build.0 = Debug|x64
+		{AD0E4E69-65CA-4D62-828D-61E57A02004A}.Debug|x86.ActiveCfg = Debug|Win32
+		{AD0E4E69-65CA-4D62-828D-61E57A02004A}.Debug|x86.Build.0 = Debug|Win32
+		{AD0E4E69-65CA-4D62-828D-61E57A02004A}.Release|x64.ActiveCfg = Release|x64
+		{AD0E4E69-65CA-4D62-828D-61E57A02004A}.Release|x64.Build.0 = Release|x64
+		{AD0E4E69-65CA-4D62-828D-61E57A02004A}.Release|x86.ActiveCfg = Release|Win32
+		{AD0E4E69-65CA-4D62-828D-61E57A02004A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
