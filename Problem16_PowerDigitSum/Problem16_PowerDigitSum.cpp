@@ -1,5 +1,4 @@
-// Problem16_PowerDigitSum.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+// Program to 
 
 #include <iostream>
 
