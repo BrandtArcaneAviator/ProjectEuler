@@ -94,6 +94,12 @@ Program to count the maximum number of routes through
  unique vectors equals the number of unique paths.
  We can thus make a vector of these binary path
  vectors using a vector of a class of these vectors.
+
+ I'll note that, as in problem 24, to do permutations
+ in lexicographic order, we can use std::next_permutation.
+ We can use this here to iterate permutations, saving
+ only the unique ones (we then need a condition
+ to know when we've done all permutations.
 */  
 
 
