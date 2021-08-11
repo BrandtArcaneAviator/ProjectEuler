@@ -140,6 +140,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Problem24_LexicographicPermutations.cpp" />
+    <ClCompile Include="Problem24_FunctionLibrary.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Problem24_FunctionLibrary.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
