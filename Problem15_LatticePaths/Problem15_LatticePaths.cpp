@@ -102,7 +102,7 @@ Program to count the maximum number of routes through
  to know when we've done all permutations.
 */  
 
-
+#include <algorithm> // for std::next_permutation
 #include <iostream>
 #include <numeric> // For std::accumulate.
 #include <vector>
@@ -115,20 +115,19 @@ class BinaryPath
 {
 private:
 	std::vector<int> m_binarypath{};
-	int m_a{};
 	int m_b{};
 
 public:
 	// Default initalizes a 1 by 1 grid.
-	BinaryPath() : m_a{ 1 }, m_b{ 1 }
+	BinaryPath() : m_b{ 1 }
 	{
 		m_binarypath.reserve(2);
 	}
 
 	// For an axb grid:
-	BinaryPath(int& a, int& b) : m_a{ a }, m_b{ b }
+	BinaryPath(int& a, int& b) : m_b{ b }
 	{
-		m_binarypath.reserve((m_a + m_b));
+		m_binarypath.reserve((a + m_b));
 	}
 
 	std::vector<int>& getPath() { return m_binarypath; }
@@ -139,9 +138,18 @@ public:
 	Note nElement goes from 0 to a + b - 1,
 	and that nValue should only have 0 or 1 values.
 	*/
-	void setPathStep(int& nElement, int nValue)
+	void setPathStep(const int& nElement, const int& nValue)
 	{
 		m_binarypath.at(nElement) = nValue;
+	}
+
+	/* To set a new path using setPathStep(): */
+	void setNewPath(const std::vector<int>& newPath)
+	{
+		for (int id{ 0 }; id < static_cast<int>(newPath.size()); ++id)
+		{
+			setPathStep(id, newPath.at(id));
+		}
 	}
 
 	/*
@@ -212,21 +220,40 @@ int main()
 	Now we need to run through permutations of paths
 	which satisfy checkNumMoves() and find unique ones.
 	Note again that each element can only have either 0
-	or 1 values.
+	or 1 values.  For the 2x2 dxample, e.g., note we have
+	two 0 and two 1 values, so we need the unique permutations 
+	of the digit vector [1,1,0,0], which is already made
+	above by the first initialization.
 	*/
 	
-	// Outer loop for permutations:
-	/*
-	for ()
+	/* Boolean variable for confirming uniquness: */
+	bool pathisUnique{ false };
+
+	/* Outer loop for permutations: */
+	do
 	{
-		// Inner loop for constructing currentPaths:
-		for ()
+		/* Checking previous permutations for uniquness */
+		for (BinaryPath path : uniquePaths)
 		{
-
+			/* If current path is unique: */
+			if (path.getPath() != currentPath.getPath())
+			{
+				;
+			}
+			else
+			{
+				;
+			}
 		}
-	}
-	*/
 
+	} while (std::next_permutation(currentPath.getPath().begin(), currentPath.getPath().end()));
+
+	/* 
+	MAJOR NOTE: YOU MAY WANT TO REMOVE THE CLASS OBJECT, 
+	SINCE ITS MOSTLY UNNECESSARY AND IT PREVENTS PROPER CHANGE
+	TO CURRENTPATH HERE (I.E. NEXT_PERMUTATION CANNOT ACCESS
+	THE CLASS OBJECT VECTOR<INT> WHERE THE DIGITS ARE STORED.
+	*/
 
 	return 0;
 }
