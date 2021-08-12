@@ -24,7 +24,7 @@ Program to count the maximum number of routes through
 	 5) 0,0 -> 0,1 -> 1,1 -> 1,2 -> 2,2.
 	 6) 0,0 -> 0,1 -> 0,2 -> 1,2 -> 2,2.
 
- Thus, for an arbitrary a by b grid, we need to implement
+ Thus, for an arbitrary a by b grid, we would need to implement
  the following:
 	 i) A matrix representing the grid (a 2-d std::vector).
 	 ii) A "2-d" point (can use a class object for this),
@@ -34,7 +34,7 @@ Program to count the maximum number of routes through
 	 iii) Member functions which check the current position
 	    and execute a specific path (right one, down one).
 	 iv) A counter for the number of possible routes.  
- Note that we only care about unique routes, so this
+ However, note that we only care about unique routes, so this
  should only ever increase when we take unique paths.
  To this end, we can record previous paths (e.g. using
  push_back of sets of two values into a vector; a 2-d point
@@ -94,12 +94,20 @@ Program to count the maximum number of routes through
  unique vectors equals the number of unique paths.
  We can thus make a vector of these binary path
  vectors using a vector of a class of these vectors.
+ By implementing it this way, we can determine the
+ number of unique paths for ANY a x b grid (again,
+ noting that a != b is fine so long as we have b 1-values
+ and a 0-values).
 
  I'll note that, as in problem 24, to do permutations
- in lexicographic order, we can use std::next_permutation.
- We can use this here to iterate permutations, saving
- only the unique ones (we then need a condition
- to know when we've done all permutations.
+ in lexicographic order, we can use std::next_permutation
+ or std::prev_permutation.
+ We use the latter here to iterate permutations starting
+ at the LAST lexicographic value (i.e. with all 1 values
+ first in the digit sequence), saving only the unique ones.
+ The length of the vector holding these permutations (vectors
+ themselves) is then the number of unique possible paths in
+ the grid using only move right one, move down 1.
 */  
 
 #include <algorithm> // for std::next_permutation
@@ -107,50 +115,6 @@ Program to count the maximum number of routes through
 #include <numeric> // For std::accumulate.
 #include <vector>
 
-/* 
-Vector class for a given path (0=move right,
-1 = move down): 
-*/
-class BinaryPath
-{
-private:
-	std::vector<int> m_binarypath{};
-	int m_b{};
-
-public:
-	// Default initalizes a 1 by 1 grid.
-	BinaryPath() : m_b{ 1 }
-	{
-		m_binarypath.reserve(2);
-	}
-
-	// For an axb grid:
-	BinaryPath(int& a, int& b) : m_b{ b }
-	{
-		m_binarypath.reserve((a + m_b));
-	}
-
-	std::vector<int>& getPath() { return m_binarypath; }
-	int& getPathStep(int& nElement1) { return m_binarypath.at(nElement1); }
-
-	/*
-	To set the binary value of a given path step.
-	Note nElement goes from 0 to a + b - 1,
-	and that nValue should only have 0 or 1 values.
-	*/
-	void setPathStep(const int& nElement, const int& nValue)
-	{
-		m_binarypath.at(nElement) = nValue;
-	}
-
-	/* To set a new path using setPathStep(): */
-	void setNewPath(const std::vector<int>& newPath)
-	{
-		for (int id{ 0 }; id < static_cast<int>(newPath.size()); ++id)
-		{
-			setPathStep(id, newPath.at(id));
-		}
-	}
 
 	/*
 	Recall a 1 value is a move down. This then
@@ -161,15 +125,13 @@ public:
 	0 values.  This is used to check that the vector is
 	a valid permutation, but does not guarentee uniquenss.
 	*/
-	bool checkNumMoves()
+	bool checkNumMoves(std::vector<int>& binarypath1, const int& b)
 	{
-		if ((std::accumulate(m_binarypath.begin(), m_binarypath.end(), 0)) == m_b)
+		if ((std::accumulate(binarypath1.begin(), binarypath1.end(), 0)) == b)
 			return true;
 		else
 			return false;
 	}
-
-};
 
 int main()
 {
@@ -188,33 +150,47 @@ int main()
 	dynamic length (we don't know the number of
 	unique permutations yet).
 	*/
-	std::vector<BinaryPath> uniquePaths{};
+	std::vector<std::vector<int>> uniquePaths{};
 
 	/*
 	Initialize a binarypath object to manipulate:
 	*/
-	BinaryPath currentPath{ a, b };
+	std::vector<int> currentPath{};
+	currentPath.reserve(a + b);
 
 	/*
 	Set up an initial path, which does b moves down first,
-	and then a moves right:
+	and then a moves right.  Notably sets up the
+	# moves down == b and # moves right = a conditions
+	by the placement of digits into this vector.
+	All subsequent permutations keep these conditions
+	as a result.
 	*/
 	for (int i{ 0 }; i < (a + b); ++i)
 	{
 		// If there are b moves down:
-		if (currentPath.checkNumMoves())
+		if (checkNumMoves(currentPath, b))
 		{
 			// Add move right.
-			currentPath.setPathStep(i, 0);
+			currentPath.push_back( 0 );
 		}
 		else
 		{
 			// Add move down.
-			currentPath.setPathStep(i, 1);
+			currentPath.push_back( 1 );
 		}
 	}
 	// Now we push_back this as the first unique vector:
 	uniquePaths.push_back( currentPath );
+
+	/* DEBUG: print the first permutation:
+	std::cout << "The first permutation is: (";
+	for (int i : currentPath)
+	{
+		std::cout << i << ", ";
+	}
+	std::cout << ").\n";
+	*/
 
 	/*
 	Now we need to run through permutations of paths
@@ -226,34 +202,72 @@ int main()
 	above by the first initialization.
 	*/
 	
-	/* Boolean variable for confirming uniquness: */
-	bool pathisUnique{ false };
+	/* Boolean Variable to confirm uniqueness: */
+	bool pathisUnique{ true };
 
-	/* Outer loop for permutations: */
+
+	/*  
+	Outer loop for permutations.
+	Note we need to use prev_permutation because
+	we started with the LAST lexicographic permutation,
+	e.g. in 2x2 grid, [1,1,0,0].
+	*/
 	do
 	{
 		/* Checking previous permutations for uniquness */
-		for (BinaryPath path : uniquePaths)
+		for (std::vector<int> path : uniquePaths)
 		{
-			/* If current path is unique: */
-			if (path.getPath() != currentPath.getPath())
+			/* If current path already exists in 
+		 	   uniquePaths (i.e. is NOT unique): */
+			if (std::equal(path.begin(), path.end(), currentPath.begin()))
 			{
-				;
+				pathisUnique = false;
+				break; 
+				/* necessary break to keep pathisUnique false
+				in the instance where we find its not unique. */
 			}
-			else
-			{
-				;
-			}
+
+			/* Will only stay true if the if statement
+			fails for ALL paths in uniquePaths,
+			i.e. we find another unique permutation: */
 		}
 
-	} while (std::next_permutation(currentPath.getPath().begin(), currentPath.getPath().end()));
+		/* If path is unique, add it; otherwise
+		   iterate to next permutation: */
+		if (pathisUnique)
+		{
+			uniquePaths.push_back(currentPath);
+		}
+
+		/* Reset boolean variable: */
+		pathisUnique = true;
+	
+	} while (std::prev_permutation(currentPath.begin(), currentPath.end()));
+	
+
+	/* DEBUG: print the permutations: */
+	for (int_fast32_t vec{ 0 }; vec < static_cast<int_fast32_t>(uniquePaths.size()); ++vec)
+	{
+		for (int_fast32_t it{ 0 }; it < static_cast<int_fast32_t>(uniquePaths[vec].size()) ; ++it)
+		{
+			std::cout << uniquePaths[vec].at(it);
+		}
+		std::cout << "    ";
+		if ((vec + 1) % 5 == 0)
+		{
+			std::cout << '\n';
+		}
+	}
+	std::cout << '\n';
+
 
 	/* 
-	MAJOR NOTE: YOU MAY WANT TO REMOVE THE CLASS OBJECT, 
-	SINCE ITS MOSTLY UNNECESSARY AND IT PREVENTS PROPER CHANGE
-	TO CURRENTPATH HERE (I.E. NEXT_PERMUTATION CANNOT ACCESS
-	THE CLASS OBJECT VECTOR<INT> WHERE THE DIGITS ARE STORED.
+	Now we can find the max number of unique paths simply
+	by checking the length of the unique paths vector: 
 	*/
+	std::cout << "The number of unique paths using only move down, move right in a "
+		<< a << " X " << b << " grid is: " << uniquePaths.size() << ".\n";
+
 
 	return 0;
 }
