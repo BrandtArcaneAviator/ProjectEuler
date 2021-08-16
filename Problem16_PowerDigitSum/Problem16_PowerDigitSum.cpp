@@ -28,18 +28,17 @@ needed for 2) using an iterator.
 // #include <ctgmath> // Needed for pow() function, but depricated
 #include <iostream>
 #include <sstream> // For stringstream.
+// #include <boost/multiprecision/cpp_int.hpp>
+// #include <boost/multiprecision.integer.hpp>
 
 /*
-NOTE!!!! Should really utilize these alongside <sstring>
+NOTE!!!! Should really utilize these alongside <sstream>
 (i.e. stringstream) input of the power function
 to get the number.  We can then use the while loop
 to pull the values from the string "vector" and avoid
 creating another vector for digits, and just sum over
 these.  At current, this code doesn't work.
 */
-// #include <boost/multiprecision/cpp_int.hpp>
-// #include <boost/multiprecision.integer.hpp>
-
 
 int main()
 {
