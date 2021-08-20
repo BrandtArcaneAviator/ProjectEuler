@@ -86,9 +86,17 @@ bool checkPentagonDiff(const std::vector<largeint_t>& pentVec, const largeint_t&
 int main()
 {
 	/*
-	Ask for the maximum upper bound of n to
-	check for minimum pentagonal D:
+	Ask for the bounds of n to check for 
+	minimum pentagonal D:  Note that this
+	allows the user to narrow into ranges,
+	such that if one doesn't find a valid
+	answer for 1 <= n <= maxN, e.g., they
+	can now look for maxN <= n <= newMaxN.
 	*/
+	std::cout << "Enter the minimum value of n for generating pentagonal numbers (start with 1 if unsure): ";
+	largeint_t minN{};
+	std::cin >> minN;
+
 	std::cout << "Enter the maximum value of n for generating pentagonal numbers: ";
 	largeint_t maxN{};
 	std::cin >> maxN;
@@ -99,7 +107,7 @@ int main()
 	*/
 	std::vector<largeint_t> pentagonValues{};
 
-	for (largeint_t i{ 1 }; i <= maxN; ++i)
+	for (largeint_t i{ minN }; i <= maxN; ++i)
 	{
 		pentagonValues.push_back( calculatePentagNumN(i) );
 	}
@@ -158,7 +166,7 @@ int main()
 	if (pentDiffValues.empty())
 	{
 		std::cout << "No valid pentagonal differences were found in the range "
-			<<"1 <= n <= " << maxN << ".\n";
+			<< minN << " <= n <= " << maxN << ".\n";
 	}
 	else // We have valid D values:
 	{
@@ -168,7 +176,7 @@ int main()
 			<< pentDiffValues.at(minDposition) << " for the pair ("
 			<< pentDiffPairs.at(minDposition).at(0) << ", "
 			<< pentDiffPairs.at(minDposition).at(1)
-			<< ") for the range of 1 <= n <= " << maxN << ".\n";
+			<< ") for the range of " << minN << " <= n <= " << maxN << ".\n";
 	}
 
 	return 0;
