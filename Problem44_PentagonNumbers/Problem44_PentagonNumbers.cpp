@@ -32,11 +32,38 @@ find sums and differences that are pentagonal (i.e.
 A and D exist in that vector).  After finding D 
 values that are pentagonal, we can search among those
 for a minimum value (using min_element() from <algorithm>).
+
+WARNING: At present, this program doesn't appear to work,
+mostly due to the fact that memory allocation becomes an
+issue for large ranges of n (which slows down the checking
+process immensely).  One can search ranges of n as a
+minor solution to this issue, but even up to n=20000, no
+results are found which have Pk +- Pj that are both
+pentagonal.  Thus, either the check function are wrong,
+or this method is insufficient to find the needed value
+(i.e. it is in the n=20000000000 scale or seomthing, which
+would take forever to manually search the ranges of and
+far exceeds what int_fast64_t could handle.  I may need
+to implement boost for this program (multiprecision integers).
+
+NOTE: An alternative method to the database idea is
+using an inverse calculation for n from a given sum or
+difference (x) via:
+	n = ( sqrt(24 * x + 1) + 1) / 6
+which notably requires the sqrt() function from <math.h>.
+Note this should only return a integer if the number
+is pentagonal (i.e. gives a whole n).  This means
+we MUST check that this returns a whole integer, but
+we need to calculate it as a double value.
+We can implement this in the existing function in place
+of the database method.
+
 */
 
 #include <algorithm> // for min_element().
 #include <cstdint> // For large int types.
 #include <iostream>
+#include <math.h> // for sqrt()
 #include <vector>
 
 using largeint_t = int_fast64_t;
@@ -51,42 +78,82 @@ largeint_t calculatePentagNumN(const largeint_t& n)
 /* Boolean function to check whether the sum
    of two pentagonal numbers exists in the
    pentagonal database vector: */
-bool checkPentagonSum(const std::vector<largeint_t>& pentVec, const largeint_t& pj, const largeint_t& pk)
+/*bool checkPentagonSum(const std::vector<largeint_t>& pentVec, const largeint_t& pj, const largeint_t& pk)
 {
 	for (largeint_t pent : pentVec)
-	{
+	{ */
 		// If sum exists in pentVec, return true.
-		if ((pj + pk) == pent)
+		/*if ((pj + pk) == pent)
 		{
 			return true;
 		}
-	}
+	}*/
 	// Otherwise, return false:
-	return false;
-}
+	/*return false;
+}*/
 
 
 /* Boolean function to check whether the difference
    of two pentagonal numbers exists in the
    pentagonal database vector: */
-bool checkPentagonDiff(const std::vector<largeint_t>& pentVec, const largeint_t& pj, const largeint_t& pk)
+/*bool checkPentagonDiff(const std::vector<largeint_t>& pentVec, const largeint_t& pj, const largeint_t& pk)
 {
 	for (largeint_t pent : pentVec)
-	{
+	{ */
 		/* If diff exists in pentVec, return true. */
-		if ((pk - pj) == pent)
+		/*if ((pk - pj) == pent)
 		{
 			return true;
 		}
-	}
+	}*/
 	// Otherwise, return false:
-	return false;
+	/*return false;
+}*/
+
+/* Function to check if a sum of two pentagonal
+   numbers is a pentagonal number using the
+   inverse function method: */
+bool checkPentSumByInv(const largeint_t& pj, const largeint_t& pk)
+{
+	largeint_t sumVal{ (pj+pk) };
+	double nVal{};
+
+	nVal = ( (sqrt(24 * sumVal + 1) + 1) / 6);
+
+	/* Checks that nVal is the same as a double 
+	and as a integer, and that its value is not 
+	infinite:  */
+	if ((nVal == floor(nVal)) && (!isinf(nVal)))
+		return true;
+	else
+		return false;
 }
+
+/* Function to check if a diff of two pentagonal
+   numbers is a pentagonal number using the
+   inverse function method: */
+bool checkPentDiffByInv(const largeint_t& pj, const largeint_t& pk)
+{
+	largeint_t diffVal{ (pk - pj) };
+	double nVal{};
+
+	nVal = ((sqrt(24 * diffVal + 1) + 1) / 6);
+
+	/* Checks that nVal is the same as a double
+	and as a integer, and that its value is not
+	infinite:  */
+	if ( (nVal == floor(nVal)) && (!isinf(nVal)) )
+		return true;
+	else
+		return false;
+}
+
+
 
 int main()
 {
 	/*
-	Ask for the bounds of n to check for 
+	Ask for the bounds of n to check for
 	minimum pentagonal D:  Note that this
 	allows the user to narrow into ranges,
 	such that if one doesn't find a valid
@@ -102,23 +169,23 @@ int main()
 	std::cin >> maxN;
 
 	/*
-	Generate a database of pentagonal values up
-	to the max value of n:
+	Generate a database of pentagonal values in
+	the range of n provided:
 	*/
-	std::vector<largeint_t> pentagonValues{};
+	/*std::vector<largeint_t> pentagonValues{};
 
 	for (largeint_t i{ minN }; i <= maxN; ++i)
 	{
-		pentagonValues.push_back( calculatePentagNumN(i) );
-	}
+		pentagonValues.push_back(calculatePentagNumN(i));
+	}*/
 	/* DEBUG: Print this vector:
 	for (largeint_t a : pentagonValues)
 	{
 		std::cout << a << ", ";
 	}
-	std::cout << '\n'; */
-	
-	
+	std::cout << '\n';*/
+
+
 	/*
 	Now we need to sweep sums and differences in this
 	vector database and check for pentagonal values, and
@@ -129,17 +196,29 @@ int main()
 	std::vector<largeint_t> tempPair{};
 	tempPair.resize(2);
 
-	for (largeint_t pj : pentagonValues)
+	std::vector<largeint_t> tempNPair{};
+	std::vector<std::vector<largeint_t>> pentDiffNPairs{};
+	tempNPair.resize(2);
+
+	largeint_t pj{};
+	largeint_t pk{};
+
+	for (largeint_t itj{minN}; itj <= maxN; ++itj)
 	{
-		for (largeint_t pk : pentagonValues)
+		pj = calculatePentagNumN(itj);
+
+		for (largeint_t itk{ minN }; itk <= maxN; ++itk)
 		{
+			pk = calculatePentagNumN(itk);
+
 			// Skips repeat values, ensures D is positive.
 			if (pk > pj)
 			{
 				/* If both the sum and diff of Pj, Pk in
 				range are pentagonal: */
-				/* && checkPentagonDiff(pentagonValues, pj, pk) */
-				if (checkPentagonSum(pentagonValues, pj, pk) && checkPentagonDiff(pentagonValues, pj, pk))
+				/*if (checkPentagonSum(pentagonValues, pj, pk) && checkPentagonDiff(pentagonValues, pj, pk))*/
+				/* checkPentSumByInv(pj, pk) || */
+				if (checkPentSumByInv(pj, pk) && checkPentDiffByInv(pj, pk))
 				{
 					// Record the difference value:
 					pentDiffValues.push_back((pk - pj));
@@ -147,7 +226,11 @@ int main()
 					// And record the relevant pair for that D:
 					tempPair.at(0) = pj;
 					tempPair.at(1) = pk;
+					tempNPair.at(0) = static_cast<largeint_t>(floor(((sqrt(24 * pj + 1) + 1) / 6)));
+					tempNPair.at(1) = static_cast<largeint_t>(floor(((sqrt(24 * pk + 1) + 1) / 6)));
+
 					pentDiffPairs.push_back(tempPair);
+					pentDiffNPairs.push_back(tempNPair);
 				}
 			}
 		}
@@ -162,6 +245,15 @@ int main()
 	pair:
 	*/
 
+	/* DEBUG: used to check that the readout below works:
+	pentDiffValues.push_back(1);
+	pentDiffValues.push_back(2);
+	pentDiffPairs.push_back({ 1, 2 });
+	pentDiffPairs.push_back({ 3, 4 }); 
+	pentDiffNPairs.push_back({ 1, 2 });
+	pentDiffNpairs.push_back({ 3, 4 });
+	*/
+
 	// If we find no valid D values, report this:
 	if (pentDiffValues.empty())
 	{
@@ -173,7 +265,9 @@ int main()
 		largeint_t minDposition{ std::distance(pentDiffValues.begin(), std::min_element(pentDiffValues.begin(), pentDiffValues.end())) };
 
 		std::cout << "The minimum pentagonal difference was found to be "
-			<< pentDiffValues.at(minDposition) << " for the pair ("
+			<< pentDiffValues.at(minDposition) << " for the pair (P_" 
+			<< pentDiffNPairs.at(minDposition).at(0) << ", P_"
+			<< pentDiffNPairs.at(minDposition).at(1) << ") = ("
 			<< pentDiffPairs.at(minDposition).at(0) << ", "
 			<< pentDiffPairs.at(minDposition).at(1)
 			<< ") for the range of " << minN << " <= n <= " << maxN << ".\n";
