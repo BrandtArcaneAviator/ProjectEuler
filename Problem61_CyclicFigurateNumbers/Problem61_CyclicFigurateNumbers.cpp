@@ -48,6 +48,12 @@ types, it then makes sense to use the following algorithm:
 	   new type.
 	iv) Repeat i-iii) until we have one number for each type
 	   that satisfies the cyclic property.
+	v) IF we run into the issue that there isn't a number
+	   following this cycle (e.g. we run all possible
+	   pentagonal numbers for a given set up to that point
+	   but find no numbers that match the cyclic property),
+	   then we MUST reset back to step i) for the next potential
+	   triangular-square pair.
 Note, though, that it may be possible that the polygonal numbers
 are NOT ordered by their polygonal types, so we should also be
 checking permutations of their ordering (keeping the changing
@@ -78,6 +84,7 @@ integers) for polygonal numbers near (but above) 1000 and near
 	Octagonal 4-digit bounds: 19 <= n <= 58
 */
 
+#include <algorithm> // for next_permutation()
 #include <cstdint>
 #include <iostream>
 #include <sstream> // for stringstream.
@@ -108,16 +115,22 @@ lint_t calculatePolygonalValue(const lint_t& n, const PolygonalType& poly)
 	{
 	case PolygonalType::triangular:
 		return ((n * (n + 1)) / 2);
+		break;
 	case PolygonalType::square:
 		return (n*n);
+		break;
 	case PolygonalType::pentagonal:
 		return ((n * (3*n - 1)) / 2);
+		break;
 	case PolygonalType::hexagonal:
 		return (n * (2*n - 1));
+		break;
 	case PolygonalType::heptagonal:
 		return ((n * (5*n - 3)) / 2);
+		break;
 	case PolygonalType::octagonal:
 		return (n * (3*n - 2));
+		break;
 	default: return 0;
 	}
 }
@@ -217,7 +230,7 @@ does not return a valid n for the given polygonal type. */
 int main()
 {
 	/*
-	Debug:
+	DEBUG:
 	Determine the bounds of n for 4-digit nums (1000-9999)
 	for each polygonal type:
 	*/
@@ -259,11 +272,224 @@ int main()
 
 	/* Initialize a vector to contain the set of numbers: */
 	std::vector<lint_t> cyclicSet{};
-	cyclicSet.reserve( 6 );
+	cyclicSet.resize( 6 );
 
-	/*  */
+	lint_t tempTri{ 0 };
+	lint_t tempSquare{ 0 };
+	lint_t tempPent{ 0 };
+	lint_t tempHex{ 0 };
+	lint_t tempHept{ 0 };
+	lint_t tempOct{ 0 };
+
+	bool setisFound{ false };
 
 
+	///* For loops for polygonal values: */
+	//for (lint_t trin{ 45 }; trin <= 140; ++trin) 
+	//{
+	//	tempTri = calculatePolygonalValue(trin, PolygonalType::triangular);
+
+	//	for (lint_t squaren{ 32 }; squaren <= 99; ++squaren) 
+	//	{
+	//		tempSquare = calculatePolygonalValue(squaren, PolygonalType::square);
+
+	//		if (checkCyclicPair4digit(tempTri, tempSquare))
+	//		{
+	//			/* If true, move to next polygonal number: */
+	//			for (lint_t pentn{ 26 }; pentn <= 81; ++pentn)
+	//			{
+	//				tempPent = calculatePolygonalValue(pentn, PolygonalType::pentagonal);
+
+	//				if (checkCyclicPair4digit(tempSquare, tempPent))
+	//				{
+	//					for (lint_t hexn{ 23 }; hexn <= 70; ++hexn)
+	//					{
+	//						tempHex = calculatePolygonalValue(hexn, PolygonalType::hexagonal);
+
+	//						if (checkCyclicPair4digit(tempPent, tempHex))
+	//						{
+	//							for (lint_t heptn{21}; heptn <= 63; ++heptn)
+	//							{
+	//								tempHept = calculatePolygonalValue(heptn, PolygonalType::heptagonal);
+
+	//								if (checkCyclicPair4digit(tempHex, tempHept))
+	//								{
+	//									for (lint_t octn{19}; octn <= 58; ++octn)
+	//									{
+	//										tempOct = calculatePolygonalValue(octn, PolygonalType::octagonal);
+
+	//										/* For last element in cycle, also check against first element: */
+	//										if (checkCyclicPair4digit(tempHept, tempOct) && checkCyclicPair4digit(tempOct, tempTri))
+	//										{
+	//											/* If true, we've found the set so record it: */
+	//											cyclicSet.at(0) = tempTri;
+	//											cyclicSet.at(1) = tempSquare;
+	//											cyclicSet.at(2) = tempPent;
+	//											cyclicSet.at(3) = tempHex;
+	//											cyclicSet.at(4) = tempHept;
+	//											cyclicSet.at(5) = tempOct;
+	//											setisFound = true;
+	//										}
+
+	//										if (setisFound)
+	//										{
+	//											break;
+	//										}
+	//									}
+	//								}
+	//								
+	//								if (setisFound)
+	//								{
+	//									break;
+	//								}
+	//							}
+	//						}
+	//						
+	//						if (setisFound)
+	//						{
+	//							break;
+	//						}
+	//					}
+	//				}
+	//				
+	//				if (setisFound)
+	//				{
+	//					break;
+	//				}
+	//			}
+	//		}
+	//		
+	//		if (setisFound)
+	//		{
+	//			break;
+	//		}
+	//	}
+
+	//	if (setisFound)
+	//	{
+	//		break;
+	//	}
+	//}
+
+
+	/* Alternate method including various permutations: */
+	for (lint_t trin{ 45 }; trin <= 140; ++trin)
+	{
+		tempTri = calculatePolygonalValue(trin, PolygonalType::triangular);
+
+		for (lint_t squaren{ 32 }; squaren <= 99; ++squaren)
+		{
+			tempSquare = calculatePolygonalValue(squaren, PolygonalType::square);
+
+			for (lint_t pentn{ 26 }; pentn <= 81; ++pentn)
+			{
+				tempPent = calculatePolygonalValue(pentn, PolygonalType::pentagonal);
+
+				for (lint_t hexn{ 23 }; hexn <= 70; ++hexn)
+				{
+					tempHex = calculatePolygonalValue(hexn, PolygonalType::hexagonal);
+
+					for (lint_t heptn{ 21 }; heptn <= 63; ++heptn)
+					{
+						tempHept = calculatePolygonalValue(heptn, PolygonalType::heptagonal);
+
+						for (lint_t octn{ 19 }; octn <= 58; ++octn)
+						{
+							tempOct = calculatePolygonalValue(octn, PolygonalType::octagonal);
+
+							/* Now we set up a permutation: */
+							cyclicSet.at(0) = tempTri;
+							cyclicSet.at(1) = tempSquare;
+							cyclicSet.at(2) = tempPent;
+							cyclicSet.at(3) = tempHex;
+							cyclicSet.at(4) = tempHept;
+							cyclicSet.at(5) = tempOct;
+
+							/* Now check this and all other possible permuations: */
+							do
+							{
+								if (checkCyclicPair4digit(cyclicSet.at(0), cyclicSet.at(1)))
+								{
+									if (checkCyclicPair4digit(cyclicSet.at(1), cyclicSet.at(2)))
+									{
+										if (checkCyclicPair4digit(cyclicSet.at(2), cyclicSet.at(3)))
+										{
+											if (checkCyclicPair4digit(cyclicSet.at(3), cyclicSet.at(4)))
+											{
+												if (checkCyclicPair4digit(cyclicSet.at(4), cyclicSet.at(5)))
+												{
+													if (checkCyclicPair4digit(cyclicSet.at(5), cyclicSet.at(0)))
+													{
+														setisFound = true;
+														break;
+													}
+												}
+											}
+										}
+									}
+								}
+							} while (std::next_permutation(cyclicSet.begin(), cyclicSet.end()));
+
+							if (setisFound)
+							{
+								break;
+							}
+						}
+
+						if (setisFound)
+						{
+							break;
+						}
+					}
+
+					if (setisFound)
+					{
+						break;
+					}
+				}
+
+				if (setisFound)
+				{
+					break;
+				}
+			}
+
+			if (setisFound)
+			{
+				break;
+			}
+		}
+
+		if (setisFound)
+		{
+			break;
+		}
+	}
+
+
+	/* DEBUG: Print the set of numbers: */
+	std::cout << "( ";
+	for (lint_t it2{0}; it2 < cyclicSet.size(); ++it2)
+	{
+		if (it2 != (cyclicSet.size() - 1))
+			std::cout << cyclicSet.at(it2) << ", ";
+		else
+			std::cout << cyclicSet.at(it2);
+	}
+	std::cout << ")\n";
+
+	/* Now return the sum of these numbers to the user: */
+	lint_t totalSum{ 0 };
+
+	for (lint_t b : cyclicSet)
+	{
+		totalSum += b;
+	}
+
+	std::cout << "The sum of all cyclic numbers in the "
+		<< "polygonal set (Tri, Square, Pent, Hex, Hept, Oct) yields "
+		<< totalSum << ".\n";
+	
 
 	return 0;
 }
