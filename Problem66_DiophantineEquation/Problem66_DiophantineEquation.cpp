@@ -24,12 +24,14 @@ value for that range (e.g. all squares up to 7 in the previous case).
 
 Here, we want to identify this kind of specific D for the range
 D <= 1000.  Thus, after creating the range vector for D, we
-then check various values of x and y (starting at positive integer
+then check various values of y (starting at positive integer
 1) that satisfy the Disophantine equation for a given D and record
 the first x value (the minimum value of x, i.e.) which satisfies
 this equation for smallest y (this is done by an if statement that
-catches the first occurence).  We then repeat this algorithm for
-each D value until we have the full vector of minimal x values
+catches the first occurence).  Note that, in this way, we are solving
+the Diophantine equation for x for a given D and y, only recording the
+case where x returns a whole integer.  We then repeat this algorithm 
+for each D value until we have the full vector of minimal x values
 (that directly corresponds, element to element, x to D value).
 From using max_element() from <algorithm>, we find the element
 position of the maximum value of x in that range, and use it
@@ -53,9 +55,7 @@ For clarity, this algorithm is:
 	ii) For each value in the D vector, identify the Disophantine
 	equation it satisfies that has the minimum x for minimum y.
 	This corresponds, naturally, to the first occurance of
-	satisfying the equation for x and y loops starting at 1
-	(but note this requires the x loop being the outer loop,
-	prioritizing the minimization of x over y).
+	satisfying the equation for a y loops starting at 1.
 
 	iii) When ii) is satisfied, record that minimal x in
 	a vector, where the position of that x correponds to
@@ -69,6 +69,31 @@ For clarity, this algorithm is:
 	identify the associated D value.
 
 	vi) Return this D value to the user.
+
+
+	Edit:
+	Since 3 for loops of substaintial size scales as N^3,
+	this program runs quite slowly as described above.
+	Doing some research on the Diophantine equation
+	shows that this specific form in this program is
+	known as Pell's equation (x^2 + D * y^2 = 1).
+	According to said research, the fundamental solution
+	for such an equation utilizing a solution (which 
+	minimizes x) like this:
+		x = h_i, y = k_i, 
+	where h_i/k_i is the sequence of convergence to the 
+	regular continued fraction of sqrt(D).  Notably,
+	problem 64 of ProjectEuler deals with this kind of
+	continued fraction. Thus, we can utilize the code
+	for that problem here to calculate the continued
+	fraction expansion and testing each successive
+	convergent expansion until a solution is found.
+
+	This allows us to solve for minimal x without the 
+	need for the x and y loops dictated above.  Thus,
+	this program will now be altered to incorporate this
+	method.
+
 */
 
 #include <algorithm>
@@ -82,9 +107,9 @@ using lint_t = int_fast64_t;
 /* Boolean function that checks the Diophantine equation
 for a given D, x, and y.  Returns true if the Diophantine
 equation for those values is satisfied. */
-bool checkDiophantineEqn(const lint_t& D1, const lint_t& x1, const lint_t& y1)
+bool checkDiophantineEqn(const lint_t& d1, const lint_t& x1, const lint_t& y1)
 {
-	if (((x1 * x1) - (D1 * (y1 * y1))) == 1)
+	if (((x1 * x1) - (d1 * (y1 * y1))) == 1)
 		return true;
 	else
 		return false;
