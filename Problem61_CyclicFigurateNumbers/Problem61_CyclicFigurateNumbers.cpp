@@ -270,7 +270,8 @@ int main()
 
 
 
-	/* Initialize a vector to contain the set of numbers: */
+	/* Initialize a vector to contain the set of numbers
+	and variables to calculate the numbers: */
 	std::vector<lint_t> cyclicSet{};
 	cyclicSet.resize( 6 );
 
@@ -284,187 +285,77 @@ int main()
 	bool setisFound{ false };
 
 
-	///* For loops for polygonal values: */
-	//for (lint_t trin{ 45 }; trin <= 140; ++trin) 
-	//{
-	//	tempTri = calculatePolygonalValue(trin, PolygonalType::triangular);
+	/* Yet another alternate method, this time making "dictionary"
+	vectors for each polygonal type, then checking amongst those
+	values for a cyclical set (note again this set doesn't need
+	to be in order, i.e. tri, square, pent, etc.): */
+	std::vector<lint_t> triDictionary{};
+	std::vector<lint_t> squareDictionary{};
+	std::vector<lint_t> pentDictionary{};
+	std::vector<lint_t> hexDictionary{};
+	std::vector<lint_t> heptDictionary{};
+	std::vector<lint_t> octDictionary{};
 
-	//	for (lint_t squaren{ 32 }; squaren <= 99; ++squaren) 
-	//	{
-	//		tempSquare = calculatePolygonalValue(squaren, PolygonalType::square);
-
-	//		if (checkCyclicPair4digit(tempTri, tempSquare))
-	//		{
-	//			/* If true, move to next polygonal number: */
-	//			for (lint_t pentn{ 26 }; pentn <= 81; ++pentn)
-	//			{
-	//				tempPent = calculatePolygonalValue(pentn, PolygonalType::pentagonal);
-
-	//				if (checkCyclicPair4digit(tempSquare, tempPent))
-	//				{
-	//					for (lint_t hexn{ 23 }; hexn <= 70; ++hexn)
-	//					{
-	//						tempHex = calculatePolygonalValue(hexn, PolygonalType::hexagonal);
-
-	//						if (checkCyclicPair4digit(tempPent, tempHex))
-	//						{
-	//							for (lint_t heptn{21}; heptn <= 63; ++heptn)
-	//							{
-	//								tempHept = calculatePolygonalValue(heptn, PolygonalType::heptagonal);
-
-	//								if (checkCyclicPair4digit(tempHex, tempHept))
-	//								{
-	//									for (lint_t octn{19}; octn <= 58; ++octn)
-	//									{
-	//										tempOct = calculatePolygonalValue(octn, PolygonalType::octagonal);
-
-	//										/* For last element in cycle, also check against first element: */
-	//										if (checkCyclicPair4digit(tempHept, tempOct) && checkCyclicPair4digit(tempOct, tempTri))
-	//										{
-	//											/* If true, we've found the set so record it: */
-	//											cyclicSet.at(0) = tempTri;
-	//											cyclicSet.at(1) = tempSquare;
-	//											cyclicSet.at(2) = tempPent;
-	//											cyclicSet.at(3) = tempHex;
-	//											cyclicSet.at(4) = tempHept;
-	//											cyclicSet.at(5) = tempOct;
-	//											setisFound = true;
-	//										}
-
-	//										if (setisFound)
-	//										{
-	//											break;
-	//										}
-	//									}
-	//								}
-	//								
-	//								if (setisFound)
-	//								{
-	//									break;
-	//								}
-	//							}
-	//						}
-	//						
-	//						if (setisFound)
-	//						{
-	//							break;
-	//						}
-	//					}
-	//				}
-	//				
-	//				if (setisFound)
-	//				{
-	//					break;
-	//				}
-	//			}
-	//		}
-	//		
-	//		if (setisFound)
-	//		{
-	//			break;
-	//		}
-	//	}
-
-	//	if (setisFound)
-	//	{
-	//		break;
-	//	}
-	//}
-
-
-	/* Alternate method including various permutations: */
+	/* Set up the dictionaries: */
 	for (lint_t trin{ 45 }; trin <= 140; ++trin)
 	{
 		tempTri = calculatePolygonalValue(trin, PolygonalType::triangular);
-
-		for (lint_t squaren{ 32 }; squaren <= 99; ++squaren)
-		{
-			tempSquare = calculatePolygonalValue(squaren, PolygonalType::square);
-
-			for (lint_t pentn{ 26 }; pentn <= 81; ++pentn)
-			{
-				tempPent = calculatePolygonalValue(pentn, PolygonalType::pentagonal);
-
-				for (lint_t hexn{ 23 }; hexn <= 70; ++hexn)
-				{
-					tempHex = calculatePolygonalValue(hexn, PolygonalType::hexagonal);
-
-					for (lint_t heptn{ 21 }; heptn <= 63; ++heptn)
-					{
-						tempHept = calculatePolygonalValue(heptn, PolygonalType::heptagonal);
-
-						for (lint_t octn{ 19 }; octn <= 58; ++octn)
-						{
-							tempOct = calculatePolygonalValue(octn, PolygonalType::octagonal);
-
-							/* Now we set up a permutation: */
-							cyclicSet.at(0) = tempTri;
-							cyclicSet.at(1) = tempSquare;
-							cyclicSet.at(2) = tempPent;
-							cyclicSet.at(3) = tempHex;
-							cyclicSet.at(4) = tempHept;
-							cyclicSet.at(5) = tempOct;
-
-							/* Now check this and all other possible permuations: */
-							do
-							{
-								if (checkCyclicPair4digit(cyclicSet.at(0), cyclicSet.at(1)))
-								{
-									if (checkCyclicPair4digit(cyclicSet.at(1), cyclicSet.at(2)))
-									{
-										if (checkCyclicPair4digit(cyclicSet.at(2), cyclicSet.at(3)))
-										{
-											if (checkCyclicPair4digit(cyclicSet.at(3), cyclicSet.at(4)))
-											{
-												if (checkCyclicPair4digit(cyclicSet.at(4), cyclicSet.at(5)))
-												{
-													if (checkCyclicPair4digit(cyclicSet.at(5), cyclicSet.at(0)))
-													{
-														setisFound = true;
-														break;
-													}
-												}
-											}
-										}
-									}
-								}
-							} while (std::next_permutation(cyclicSet.begin(), cyclicSet.end()));
-
-							if (setisFound)
-							{
-								break;
-							}
-						}
-
-						if (setisFound)
-						{
-							break;
-						}
-					}
-
-					if (setisFound)
-					{
-						break;
-					}
-				}
-
-				if (setisFound)
-				{
-					break;
-				}
-			}
-
-			if (setisFound)
-			{
-				break;
-			}
-		}
-
-		if (setisFound)
-		{
-			break;
-		}
+		triDictionary.push_back(tempTri);
 	}
+
+	for (lint_t squaren{ 32 }; squaren <= 99; ++squaren)
+	{
+		tempSquare = calculatePolygonalValue(squaren, PolygonalType::square);
+		squareDictionary.push_back(tempSquare);
+	}
+
+	for (lint_t pentn{ 26 }; pentn <= 81; ++pentn)
+	{
+		tempPent = calculatePolygonalValue(pentn, PolygonalType::pentagonal);
+		pentDictionary.push_back(tempPent);
+	}
+
+	for (lint_t hexn{ 23 }; hexn <= 70; ++hexn)
+	{
+		tempHex = calculatePolygonalValue(hexn, PolygonalType::hexagonal);
+		hexDictionary.push_back(tempHex);
+	}
+
+	for (lint_t heptn{ 21 }; heptn <= 63; ++heptn)
+	{
+		tempHept = calculatePolygonalValue(heptn, PolygonalType::heptagonal);
+		heptDictionary.push_back(tempHept);
+	}
+
+	for (lint_t octn{ 19 }; octn <= 58; ++octn)
+	{
+		tempOct = calculatePolygonalValue(octn, PolygonalType::octagonal);
+		octDictionary.push_back(tempOct);
+	}
+
+
+	/* With these dictionaries, we now need to construct lists of
+	all possible permutations in terms of their polygonal natures,
+	i.e. we need to check across the dictionaries for a given
+	order (e.g. (P_3,P_4,P_5,P_6,P_7,P_8) is one such list). 
+	Note we should be able to permute this somehow to get other orders. */
+	std::vector<PolygonalType> polygonalOrder{ PolygonalType::triangular,PolygonalType::square,
+		PolygonalType::pentagonal, PolygonalType::hexagonal, PolygonalType::heptagonal, PolygonalType::octagonal };
+	
+	lint_t cyclicIter{ 0 }; // Iterator for cyclicset positions.
+
+
+	/* Need to progress through all permutations of this vector, so: */
+	do
+	{
+		for (PolygonalType ptype : polygonalOrder)
+		{
+			cyclicSet.at(cyclicIter) = 0;
+			++cyclicIter;
+		}
+
+		cyclicIter = 0;
+	} while (std::next_permutation(polygonalOrder.begin(), polygonalOrder.end()));
 
 
 	/* DEBUG: Print the set of numbers: */

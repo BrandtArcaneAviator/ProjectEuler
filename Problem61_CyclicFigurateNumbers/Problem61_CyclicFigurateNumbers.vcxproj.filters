@@ -18,5 +18,8 @@
     <ClCompile Include="Problem61_CyclicFigurateNumbers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AlternativeMethods.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
