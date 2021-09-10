@@ -57,6 +57,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Problem33_DigitCancellingFr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Problem72_CountingFractions", "Problem72_CountingFractions\Problem72_CountingFractions.vcxproj", "{D3E0FD0F-C722-4192-9071-605C62C8A022}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Problem69_TotientMax", "Problem69_TotientMax\Problem69_TotientMax.vcxproj", "{15A688F5-A63D-4198-BD58-B92FFCA9E25E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -281,6 +283,14 @@ Global
 		{D3E0FD0F-C722-4192-9071-605C62C8A022}.Release|x64.Build.0 = Release|x64
 		{D3E0FD0F-C722-4192-9071-605C62C8A022}.Release|x86.ActiveCfg = Release|Win32
 		{D3E0FD0F-C722-4192-9071-605C62C8A022}.Release|x86.Build.0 = Release|Win32
+		{15A688F5-A63D-4198-BD58-B92FFCA9E25E}.Debug|x64.ActiveCfg = Debug|x64
+		{15A688F5-A63D-4198-BD58-B92FFCA9E25E}.Debug|x64.Build.0 = Debug|x64
+		{15A688F5-A63D-4198-BD58-B92FFCA9E25E}.Debug|x86.ActiveCfg = Debug|Win32
+		{15A688F5-A63D-4198-BD58-B92FFCA9E25E}.Debug|x86.Build.0 = Debug|Win32
+		{15A688F5-A63D-4198-BD58-B92FFCA9E25E}.Release|x64.ActiveCfg = Release|x64
+		{15A688F5-A63D-4198-BD58-B92FFCA9E25E}.Release|x64.Build.0 = Release|x64
+		{15A688F5-A63D-4198-BD58-B92FFCA9E25E}.Release|x86.ActiveCfg = Release|Win32
+		{15A688F5-A63D-4198-BD58-B92FFCA9E25E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
