@@ -55,6 +55,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Problem57_SquareRootConverg
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Problem33_DigitCancellingFractions", "..\Problem33_DigitCancellingFractions\Problem33_DigitCancellingFractions.vcxproj", "{D21A4161-BBDE-4061-907A-4D3634344AC2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Problem72_CountingFractions", "Problem72_CountingFractions\Problem72_CountingFractions.vcxproj", "{D3E0FD0F-C722-4192-9071-605C62C8A022}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -271,6 +273,14 @@ Global
 		{D21A4161-BBDE-4061-907A-4D3634344AC2}.Release|x64.Build.0 = Release|x64
 		{D21A4161-BBDE-4061-907A-4D3634344AC2}.Release|x86.ActiveCfg = Release|Win32
 		{D21A4161-BBDE-4061-907A-4D3634344AC2}.Release|x86.Build.0 = Release|Win32
+		{D3E0FD0F-C722-4192-9071-605C62C8A022}.Debug|x64.ActiveCfg = Debug|x64
+		{D3E0FD0F-C722-4192-9071-605C62C8A022}.Debug|x64.Build.0 = Debug|x64
+		{D3E0FD0F-C722-4192-9071-605C62C8A022}.Debug|x86.ActiveCfg = Debug|Win32
+		{D3E0FD0F-C722-4192-9071-605C62C8A022}.Debug|x86.Build.0 = Debug|Win32
+		{D3E0FD0F-C722-4192-9071-605C62C8A022}.Release|x64.ActiveCfg = Release|x64
+		{D3E0FD0F-C722-4192-9071-605C62C8A022}.Release|x64.Build.0 = Release|x64
+		{D3E0FD0F-C722-4192-9071-605C62C8A022}.Release|x86.ActiveCfg = Release|Win32
+		{D3E0FD0F-C722-4192-9071-605C62C8A022}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
