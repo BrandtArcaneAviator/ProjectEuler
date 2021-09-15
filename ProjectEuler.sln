@@ -69,6 +69,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Problem67_MaxPathSum2", "Pr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Problem8_LargestProductInSeries", "Problem8_LargestProductInSeries\Problem8_LargestProductInSeries.vcxproj", "{F709FDA3-2A05-4827-B7D5-F255C6C505A5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Problem10_SumOfPrimes", "Problem10_SumOfPrimes\Problem10_SumOfPrimes.vcxproj", "{BBEDE8F0-D383-4620-B61C-7C65EC8E45F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -341,6 +343,14 @@ Global
 		{F709FDA3-2A05-4827-B7D5-F255C6C505A5}.Release|x64.Build.0 = Release|x64
 		{F709FDA3-2A05-4827-B7D5-F255C6C505A5}.Release|x86.ActiveCfg = Release|Win32
 		{F709FDA3-2A05-4827-B7D5-F255C6C505A5}.Release|x86.Build.0 = Release|Win32
+		{BBEDE8F0-D383-4620-B61C-7C65EC8E45F6}.Debug|x64.ActiveCfg = Debug|x64
+		{BBEDE8F0-D383-4620-B61C-7C65EC8E45F6}.Debug|x64.Build.0 = Debug|x64
+		{BBEDE8F0-D383-4620-B61C-7C65EC8E45F6}.Debug|x86.ActiveCfg = Debug|Win32
+		{BBEDE8F0-D383-4620-B61C-7C65EC8E45F6}.Debug|x86.Build.0 = Debug|Win32
+		{BBEDE8F0-D383-4620-B61C-7C65EC8E45F6}.Release|x64.ActiveCfg = Release|x64
+		{BBEDE8F0-D383-4620-B61C-7C65EC8E45F6}.Release|x64.Build.0 = Release|x64
+		{BBEDE8F0-D383-4620-B61C-7C65EC8E45F6}.Release|x86.ActiveCfg = Release|Win32
+		{BBEDE8F0-D383-4620-B61C-7C65EC8E45F6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

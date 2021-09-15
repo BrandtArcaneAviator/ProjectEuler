@@ -72,7 +72,7 @@ int main()
 	std::vector<bool> primeBoolVec((maxn + 1), true);
 	primeBoolVec.at(0) = false; // .at(0) represents zero.
 		// NOTE this is from 0 to maxn! i.e. primeBoolVec.at(0) represents 0.
-	lint_t result{2}; // Note this is accounting for 1 * 2.
+	lint_t result{2}; // Note this is accounting for the prime 2.
 
 
 	/* Modify boolean vector to set non-primes to false.  Note
