@@ -69,19 +69,42 @@ equation:
 		= Pi_(j=1)^(inf) Sigma_(i=0)^(inf) q^(i*j)
 		= Pi_(k=1)^(inf) (1 - q^k)^-1
 If we expand this, we obtain:
-	p(n) = p(n-1) + p(k-2) - p(k-5) - p(k-7)
-		   + p(k - 12) + p(k-15) - p(k - 22)
+	p(n) = p(n-1) + p(n-2) - p(n-5) - p(n-7)
+		   + p(n - 12) + p(n-15) - p(n - 22)
 		   + ...
 Recall from above that this means p(0) = 1,
 p(1) should be 1, and p(n) = 0 for n < 0.  Note
 furthermore there is a repeating pattern of signs
 on the elements in the sum (+,+,-,-,+,+,-,-, etc.).
+The value of the subtracting nuymbers in the arguemnets
+is notably a sequence of pentagonal numbers of alternating
+signs. Thus, note also that this can be represented 
+by the series of positive integers m=1,2,3,... such that:
+	k = { m/2 + 1   if k = 0 mod 2
+	    { -m/2 - 1  else
+where notably the division m/2 is an integer division.
+Then, from this k we calculate those values using the
+pentagonal number formula:
+	f(k) = k * (3*k - 1) / 2
+Note this yields the expected sequence:
+	1, 2, 5, 7, 12, 15, 22, ...
+where, e.g., the 1 and 2 values come from:
+	m = 1 using k = -m/2 - 1 -> k=-1 -> -(-3-1)/2 = 2
+	m = 2 using k = +m/2 + 1 -> k=2 -> 2*(2*3 - 1)/2 -> 5
+	m = 3 using k = +m/2 + 1 -> k=2 -> 2*(2*3 - 1)/2 -> 5
 
-
+Also note that p(n) can become quite large for large n,
+so we may run into the issue of size for integer variables.
+To avoid the need for a large integer class (e.g. multiprecision
+variables from boost), and noting we only need a p(n) value
+that is divisible by 10^6, we technically only need to store
+the last 7 digits of each number (which can be done by
+using modulo (%) 10^6 before we store a given p(n) number.
 */
 
 
 #include <iostream>
+#include <vector>
 
 
 using lint_t = int_fast16_t;
@@ -89,8 +112,78 @@ using lint_t = int_fast16_t;
 
 int main()
 {
-	/* d */
+	/* Initialize a vector of p(n)
+	values (note position zero is
+	n = 0 giving p(0) = 1 here): */
+	std::vector<lint_t> p{};
+	p.push_back(1);
 
+
+	/* Initialize variables for loops: */
+	lint_t n{ 1 };
+	lint_t sign{ 1 };
+	lint_t k{ 1 };
+	lint_t m{ 0 };
+	lint_t penta{ 1 };
+
+
+	/* i.e. until we find our answer: */
+	while (true)
+	{
+		/* Reset m, penta, and initialize
+		next p(n) element in vector: */
+		m = 0;
+		penta = 1;
+		p.push_back(0);
+
+
+		/* Note this loop runs for all terms
+		in the expansion of a given p(n) that
+		are non-zero (recall n < 0 gives p(n) = 0): */
+		while (penta <= n)
+		{
+			/* sign yields the pattern 
+			+,+,-,-,+,+,-,-,... Note sign
+			starts with i = 0.*/
+			sign = ((m % 4 > 1) ? -1 : 1);
+			
+			/* Using the pattern for the
+			partition function p(n) above.
+			Note this loop runs this statement 
+			until p(n) is fully calculated: */
+			p.at(n) += sign * p.at(n - penta);
+
+			/* Since we don't care about large values,
+			only if modulo 10^6 yields 0, we use: */
+			p.at(n) %= 1000000;
+
+			/* Now set up next penta value using the
+			m values noted above to set k to get next
+			pentagonal number: */
+			m++;
+			k = (m % 2 == 0 ? m / 2 + 1 : -(m / 2 + 1));
+			penta = k * (3 * k - 1) / 2;
+		}
+	
+
+		/* If statement identifying the first n
+		whose p(n) % 10^6 == 9.  Note for the
+		sake of avoiding large numbers this was done
+		within the while loop above. */
+		if (p.at(n) == 0)
+		{
+			/* Used to exit loop when divisible
+			value is found. */
+			break;
+		}
+
+		n++;
+	}
+
+
+	/* Now report the current value that broke the loop: */
+	std::cout << "The smallest number of coins whose number of unique paritions is "
+		<< "divislble by 10^6 was found to be: n = " << n << ".\n";
 
 
 	return 0;
